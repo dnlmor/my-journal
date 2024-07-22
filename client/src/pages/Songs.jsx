@@ -3,6 +3,7 @@ import { fetchSongs, createSong, updateSong, deleteSong } from '../services/api'
 import FormField from '../components/FormField';
 import ErrorMessage from '../components/ErrorMessage';
 import LoadingSpinner from '../components/LoadingSpinner';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 const Songs = () => {
   const [songs, setSongs] = useState([]);
@@ -10,6 +11,9 @@ const Songs = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deletingSongId, setDeletingSongId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     loadSongs();
@@ -47,22 +51,34 @@ const Songs = () => {
     setEditingId(song._id);
   };
 
-  const handleDelete = async (id) => {
+  const handleDeleteClick = (id) => {
+    setDeletingSongId(id);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
     try {
-      await deleteSong(id);
+      await deleteSong(deletingSongId);
       loadSongs();
+      setIsDeleteDialogOpen(false);
     } catch (err) {
       setError('Failed to delete song');
     }
   };
 
+  const filteredSongs = songs.filter(song =>
+    song.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    song.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    song.album.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Songs</h1>
+    <div className="container mx-auto p-4 bg-songs-bg bg-cover min-h-screen">
+      <h1 className="text-3xl font-bold mb-4 text-white">Songs</h1>
       {error && <ErrorMessage message={error} />}
-      <form onSubmit={handleSubmit} className="mb-8">
+      <form onSubmit={handleSubmit} className="mb-8 bg-white p-6 rounded-lg shadow-md">
         <FormField
           label="Title"
           name="title"
@@ -95,6 +111,15 @@ const Songs = () => {
           {editingId ? 'Update Song' : 'Add Song'}
         </button>
       </form>
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search songs..."
+          className="w-full p-2 rounded-md"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
       <table className="min-w-full bg-white">
         <thead>
           <tr>
@@ -106,7 +131,7 @@ const Songs = () => {
           </tr>
         </thead>
         <tbody>
-          {songs.map((song) => (
+          {filteredSongs.map((song) => (
             <tr key={song._id}>
               <td className="border px-4 py-2">{song.title}</td>
               <td className="border px-4 py-2">{song.artist}</td>
@@ -114,12 +139,19 @@ const Songs = () => {
               <td className="border px-4 py-2">{song.rating}</td>
               <td className="border px-4 py-2">
                 <button onClick={() => handleEdit(song)} className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded mr-2">Edit</button>
-                <button onClick={() => handleDelete(song._id)} className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded">Delete</button>
+                <button onClick={() => handleDeleteClick(song._id)} className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded">Delete</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      <ConfirmDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this song?"
+      />
     </div>
   );
 };

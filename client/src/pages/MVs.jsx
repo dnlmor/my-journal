@@ -63,8 +63,8 @@ const MVs = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">Music Videos</h1>
+    <div className="container mx-auto p-4 bg-mvs-bg bg-cover min-h-screen">
+      <h1 className="text-3xl font-bold mb-4 text-white">Music Videos</h1>
       {error && <ErrorMessage message={error} />}
       <form onSubmit={handleSubmit} className="mb-8">
         <FormField

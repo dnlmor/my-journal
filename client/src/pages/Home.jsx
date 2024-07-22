@@ -47,8 +47,8 @@ const Home = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-4xl font-bold text-center mb-12">Welcome to MyJournal</h1>
+    <div className="min-h-screen bg-home-bg bg-cover p-8">
+      <h1 className="text-4xl font-bold text-center mb-12 text-white">Welcome to MyJournal</h1>
       {renderCategory('Blogs', blogs, '/blogs')}
       {renderCategory('Songs', songs, '/songs')}
       {renderCategory('Music Videos', mvs, '/mvs')}

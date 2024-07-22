@@ -59,7 +59,7 @@ const Movies = () => {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 bg-movies-bg bg-cover min-h-screen">
       <h1 className="text-3xl font-bold mb-4">Movies</h1>
       {error && <ErrorMessage message={error} />}
       <form onSubmit={handleSubmit} className="mb-8">
@@ -120,7 +120,7 @@ const Movies = () => {
               </td>
             </tr>
           ))}
-          </tbody>
+        </tbody>
       </table>
     </div>
   );

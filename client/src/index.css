@@ -1,3 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+module.exports = {
+    content: [
+      "./src/**/*.{js,jsx,ts,tsx}",
+    ],
+    theme: {
+      extend: {
+        backgroundImage: {
+          'home-bg': "url('/path/to/home-bg.jpg')",
+          'songs-bg': "url('/path/to/songs-bg.jpg')",
+          'mvs-bg': "url('/path/to/mvs-bg.jpg')",
+          'movies-bg': "url('/path/to/movies-bg.jpg')",
+          'recipes-bg': "url('/path/to/recipes-bg.jpg')",
+        },
+      },
+    },
+    plugins: [],
+  }
+  
